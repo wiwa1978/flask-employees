@@ -1,0 +1,36 @@
+version: '3.6'
+
+services:
+  web:
+    build: .
+    depends_on:
+      - db
+    environment:
+      STAGE: test
+      SQLALCHEMY_DATABASE_URI: 'mysql://root:12345678a-@localhost:3306/flask_employees'
+    networks:
+      - default
+    ports:
+      - 50000:5000
+    volumes:
+      - ./app:/usr/src/app/app
+      - ./migrations:/usr/src/app/migrations
+    restart: always
+
+  db:
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678a-
+      MYSQL_DATABASE: flask_employees
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 12345678a-
+    image: mariadb:latest
+    networks:
+      - default
+    ports:
+      - 33060:3306
+    restart: always
+    volumes:
+       - db_data:/var/lib/mysql
+
+volumes:
+    db_data: {}
